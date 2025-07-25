@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Salary Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0 24px 0;
+        }
+        .logo {
+            width: 56px;
+            height: 56px;
+            margin-right: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #6366f1;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(99,102,241,0.12);
+        }
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+        }
+        .title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #3730a3;
+            letter-spacing: 1px;
+        }
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 32px rgba(55,48,163,0.10);
+            padding: 32px 28px 24px 28px;
+            margin-bottom: 32px;
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 8px 40px rgba(55,48,163,0.16);
+        }
+        label {
+            font-weight: 500;
+            margin-top: 12px;
+            display: block;
+            color: #6366f1;
+            letter-spacing: 0.5px;
+        }
+        input, select {
+            width: 100%;
+            margin: 8px 0 18px 0;
+            padding: 12px 10px;
+            border-radius: 8px;
+            border: 1.5px solid #c7d2fe;
+            font-size: 1rem;
+            background: #f1f5f9;
+            transition: border 0.2s;
+        }
+        input:focus, select:focus {
+            border: 1.5px solid #6366f1;
+            outline: none;
+            background: #fff;
+        }
+        button {
+            width: 100%;
+            padding: 13px 0;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(99,102,241,0.10);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #3730a3 0%, #6366f1 100%);
+            box-shadow: 0 4px 16px rgba(99,102,241,0.18);
+        }
+        .result {
+            margin-top: 24px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.3em;
+            color: #3730a3;
+            background: #e0e7ff;
+            border-radius: 10px;
+            padding: 18px 0 14px 0;
+            box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+        }
+        .chart-container {
+            margin-top: 18px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 18px 10px 10px 10px;
+            box-shadow: 0 2px 8px rgba(99,102,241,0.06);
+        }
+        .csv-section {
+            margin-top: 18px;
+            text-align: center;
+        }
+        .csv-label {
+            color: #6366f1;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .csv-btn {
+            width: auto;
+            padding: 10px 28px;
+            margin-top: 8px;
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+        .note {
+            font-size: 0.97em;
+            color: #888;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 600px) {
+            .container { max-width: 98vw; }
+            .card { padding: 18px 6vw 18px 6vw; }
+            .header { flex-direction: column; gap: 10px; }
+            .logo { margin-right: 0; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <!-- Simple SVG logo -->
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="24" r="24" fill="#6366f1"/>
+                <path d="M24 14C20.13 14 17 17.13 17 21C17 24.87 20.13 28 24 28C27.87 28 31 24.87 31 21C31 17.13 27.87 14 24 14ZM24 26C21.24 26 19 23.76 19 21C19 18.24 21.24 16 24 16C26.76 16 29 18.24 29 21C29 23.76 26.76 26 24 26Z" fill="#fff"/>
+                <rect x="14" y="32" width="20" height="4" rx="2" fill="#fff"/>
+            </svg>
+        </div>
+        <div class="title">Employee Salary Predictor</div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <form id="predictForm">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" min="16" max="100" required>
+
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+
+                <label for="education_level">Education Level</label>
+                <select id="education_level" name="education_level" required>
+                    <option value="">Select Education</option>
+                    <option value="Bachelor">Bachelor</option>
+                    <option value="Master">Master</option>
+                    <option value="PhD">PhD</option>
+                </select>
+
+                <label for="job_title">Job Title</label>
+                <input type="text" id="job_title" name="job_title" placeholder="e.g. Software Engineer" required>
+
+                <label for="years_of_experience">Years of Experience</label>
+                <input type="number" id="years_of_experience" name="years_of_experience" min="0" max="50" required>
+
+                <label for="performance_score">Performance Score (1-10)</label>
+                <input type="number" id="performance_score" name="performance_score" min="1" max="10" required>
+
+                <button type="submit">Predict Salary</button>
+            </form>
+            <div class="result" id="result" style="display:none;"></div>
+            <div class="chart-container" style="display:none;">
+                <canvas id="salaryChart" height="120"></canvas>
+            </div>
+        </div>
+        <div class="card csv-section">
+            <div class="csv-label">Batch Prediction (CSV Upload)</div>
+            <div class="note">Upload a CSV file for batch predictions</div>
+            <input type="file" id="csvInput" accept=".csv">
+            <button class="csv-btn" id="csvBtn">Predict from CSV</button>
+        </div>
+    </div>
+    <script>
+        let avgSalary = null;
+        // Fetch average salary from backend
+        fetch('/avg_salary').then(r => r.json()).then(d => { avgSalary = d.avg_salary; });
+
+        const form = document.getElementById('predictForm');
+        const csvBtn = document.getElementById('csvBtn');
+        const csvInput = document.getElementById('csvInput');
+        const resultDiv = document.getElementById('result');
+        const chartContainer = document.querySelector('.chart-container');
+        let chart = null;
+
+        form.onsubmit = async function(e) {
+            e.preventDefault();
+            resultDiv.style.display = 'block';
+            chartContainer.style.display = 'none';
+            resultDiv.textContent = 'Predicting...';
+            const data = {
+                age: Number(document.getElementById('age').value),
+                gender: document.getElementById('gender').value,
+                education_level: document.getElementById('education_level').value,
+                job_title: document.getElementById('job_title').value,
+                years_of_experience: Number(document.getElementById('years_of_experience').value),
+                performance_score: Number(document.getElementById('performance_score').value)
+            };
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const res = await response.json();
+                if (res.predictions) {
+                    const pred = res.predictions[0];
+                    resultDiv.textContent = 'Predicted Salary: $' + pred;
+                    if (avgSalary) {
+                        chartContainer.style.display = 'block';
+                        if (chart) chart.destroy();
+                        chart = new Chart(document.getElementById('salaryChart').getContext('2d'), {
+                            type: 'bar',
+                            data: {
+                                labels: ['Predicted', 'Average'],
+                                datasets: [{
+                                    label: 'Salary',
+                                    data: [pred, avgSalary],
+                                    backgroundColor: [
+                                        'rgba(99,102,241,0.85)',
+                                        'rgba(55,48,163,0.45)'
+                                    ],
+                                    borderRadius: 8
+                                }]
+                            },
+                            options: {
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: { color: '#6366f1', font: { weight: 'bold' } }
+                                    },
+                                    x: {
+                                        ticks: { color: '#6366f1', font: { weight: 'bold' } }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    resultDiv.textContent = 'Error: ' + (res.error || 'Unknown error');
+                }
+            } catch (err) {
+                resultDiv.textContent = 'Error: ' + err.message;
+            }
+        };
+
+        csvBtn.onclick = async function() {
+            if (!csvInput.files[0]) {
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = 'Please select a CSV file.';
+                return;
+            }
+            resultDiv.style.display = 'block';
+            chartContainer.style.display = 'none';
+            resultDiv.textContent = 'Predicting...';
+            const formData = new FormData();
+            formData.append('file', csvInput.files[0]);
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                const res = await response.json();
+                if (res.predictions) {
+                    resultDiv.textContent = 'Predicted Salaries: ' + res.predictions.join(', ');
+                } else {
+                    resultDiv.textContent = 'Error: ' + (res.error || 'Unknown error');
+                }
+            } catch (err) {
+                resultDiv.textContent = 'Error: ' + err.message;
+            }
+        };
+    </script>
+</body>
+</html> 

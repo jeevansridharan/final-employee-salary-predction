@@ -1,0 +1,11 @@
+age,gender,education_level,job_title,years_of_experience,performance_score,salary
+25,Male,Bachelor,Software Engineer,3,8,70000
+30,Female,Master,Data Scientist,5,9,90000
+28,Male,Bachelor,Web Developer,4,7,65000
+35,Female,PhD,Research Scientist,7,10,110000
+40,Male,Master,Project Manager,10,8,120000
+22,Female,Bachelor,Intern,1,6,40000
+45,Male,Master,Senior Developer,15,9,130000
+33,Female,Bachelor,HR Manager,8,7,80000
+29,Male,Bachelor,Data Analyst,4,7,60000
+50,Female,PhD,CTO,20,10,200000
